@@ -3,59 +3,55 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class SellerController extends GetxController {
-
-  var sellers = <Map<String, dynamic>>[].obs;
-  var sellerProducts = <Map<String, dynamic>>[].obs;
+  var sellers = [].obs;
+  var sellerProducts = [].obs;
   RxBool isLoading = false.obs;
-
 
   @override
   void onInit() {
     super.onInit();
-    getSeller();
-    // sellerProduct(sellers as String);
-    sellerProduct(sellers.isEmpty ? "" : sellers[0]["id"]);
+    _fetchData();
+  }
+
+  Future<void> _fetchData() async {
+    try {
+      isLoading.value = true;
+
+      // Fetch sellers and seller products concurrently
+      await Future.wait([getSeller(), sellerProduct(sellers.isEmpty ? "" : sellers[0]["id"])]);
+
+      isLoading.value = false;
+    } catch (e) {
+      print("Error: $e");
+      isLoading.value = false;
+    }
   }
 
   Future<void> getSeller() async {
-    try {
-      isLoading.value = true;
-      final url = Uri.parse("https://demo.alorferi.com/api/users");
-      var response = await http.get(url);
-      isLoading.value = false;
+    final url = Uri.parse("https://demo.alorferi.com/api/users");
+    var response = await http.get(url);
 
-      if (response.statusCode == 200) {
-        Map<String, dynamic> responseData = jsonDecode(response.body);
-        List<dynamic> SellerData = responseData['data'];
-        sellers.value = List.from(SellerData);
-        print("Seller fetch successful");
-      } else {
-        print("Sellers fetch failed");
-      }
-    } catch (e) {
-      print("Error: $e");
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseData = json.decode(response.body);
+      List<dynamic> sellerData = responseData['data'];
+      sellers.value = List.from(sellerData);
+      print("Sellers fetch successful");
+    } else {
+      print("Sellers fetch failed");
     }
   }
 
   Future<void> sellerProduct(String sellerId) async {
-    try {
-      isLoading.value = true;
-      final url = Uri.parse("https://demo.alorferi.com/api/users/$sellerId/products");
-      var response = await http.get(url);
-      isLoading.value = false;
+    final url = Uri.parse("https://demo.alorferi.com/api/users/$sellerId/products");
+    var response = await http.get(url);
 
-      print(response.body);
-      if (response.statusCode == 200) {
-        Map<String, dynamic> responseData = jsonDecode(response.body);
-        List<dynamic> sellerProductsData = responseData['data'];
-        sellerProducts.value = List.from(sellerProductsData);
-        print("Seller products fetch successful");
-        refresh();
-      } else {
-        print("Seller products fetch failed");
-      }
-    } catch (e) {
-      print("Error: $e");
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseData = jsonDecode(response.body);
+      List<dynamic> sellerProductsData = responseData['data'];
+      sellerProducts.value = List.from(sellerProductsData);
+      print("Seller products fetch successful");
+    } else {
+      print("Seller products fetch failed");
     }
   }
 }

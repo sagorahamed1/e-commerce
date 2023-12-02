@@ -44,7 +44,6 @@ class _HomePageState extends State<HomePage>
           "E-commerce App",
           style: TextStyle(color: Colors.black),
         ),
-        leading: Icon(Icons.menu),
         actions: [
           //for add to card
           Icon(Icons.person),
@@ -58,7 +57,7 @@ class _HomePageState extends State<HomePage>
                 )),
             onPressed: () {
               // Navigate to the cart page when the cart icon is pressed
-              Get.to(() => AddToCartProductPage());
+              Get.to(() => AddToCartProductPage());  ///AddToCartProductPage());
             },
           ),
         ],
@@ -101,6 +100,28 @@ class _HomePageState extends State<HomePage>
                 color: Colors.purple,
                 child: SellerGridViewPage()),
           ])),
+
+
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            DrawerHeader(child: Column(
+              children: [
+                CircleAvatar(
+                  child: Image.network("https://demo.alorferi.com/images/blank_product_picture.png"),
+                )
+              ],
+            )),
+
+            ListTile(
+              onTap: (){
+               Get.to(MyProductsCrudPage()) ;
+              },
+              title: Text("My Products"),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

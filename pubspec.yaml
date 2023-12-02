@@ -39,7 +39,8 @@ dependencies:
   http: ^1.1.0
   shared_preferences: ^2.2.2
   dio: ^5.3.4
-  hive: ^2.2.3
+  image_picker: ^1.0.4
+
 
 dev_dependencies:
   flutter_test:
@@ -52,6 +53,7 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
 
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -62,11 +64,13 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  generate: true
 
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/certs/alorferi_com.cet
     - assets/add_to_card.png
+    - assets/shoping.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

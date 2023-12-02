@@ -1,40 +1,13 @@
 import 'dart:convert';
+import 'package:alorferi_app_practice/token_shareprefe.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import '../pages/home_page.dart';
-import '../pages/log_in_page.dart';
-import '../pages/all_product_gridview_page.dart';
 
 class LogInController extends GetxController {
   var token = "".obs;
 
-
-// Function to save only the token to SharedPreferences
-  Future<void> saveToken(String tokan) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("token", tokan);
-    // Update the value of the observable
-    token.value = tokan;
-  }
-
-// Function to load only the token from SharedPreferences
-  Future<String> loadToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    // Retrieve the token from SharedPreferences
-    String loadedToken = prefs.getString("token") ?? "";
-    // Update the value of the observable
-    token.value = loadedToken;
-    // Return the loaded token
-    return loadedToken;
-  }
-
-  Future<void> logout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove('token');
-    token.value = '';
-  }
 
   Future<void> login(String email, String password) async {
     try {
@@ -51,8 +24,9 @@ class LogInController extends GetxController {
         var data = jsonDecode(response.body);
         var tokan = data["access_token"];
         token.value = data["access_token"];
-        await saveToken(tokan); // Save the token to SharedPreferences
-        // Get.offAll(() => token.value.isEmpty ? LogInPage() : HomePage());
+
+       await TokenSharePrefences.saveToken(tokan);
+         Get.offAll(() => HomePage());
         refresh();
       } else {
         print("Login failed. Status code: ${response.statusCode}");

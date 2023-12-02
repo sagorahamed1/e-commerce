@@ -81,7 +81,7 @@ class ProductCard extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text("${product["name"]}", style: TextStyle(fontWeight: FontWeight.w700)),
+                  Text("${product["name"]}", style: TextStyle(fontWeight: FontWeight.w700),maxLines: 1,),
                 ],
               ),
             )
