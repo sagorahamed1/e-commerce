@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 class ProductController extends GetxController {
   var products = <Map<String, dynamic>>[].obs;
   RxBool isLoading = false.obs;
-  int currentPage = 1;
+  int currentPage = 3;
 
   Future<void> loadMore() async {
     currentPage++;

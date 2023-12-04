@@ -52,28 +52,6 @@ class MyProductController extends GetxController {
 
 
 
-  // Future<void> updateProduct(String id, Map<String, dynamic> updatedProduct) async {
-  //   try {
-  //     isLoading.value = true;
-  //     var token = loginController.token;
-  //     final response = await http.put(
-  //       Uri.parse('$apiUrl/$id'),
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         "Authorization": "Bearer $token",
-  //       },
-  //       body: json.encode(updatedProduct),
-  //     );
-  //
-  //     isLoading.value = false;
-  //     if (response.statusCode != 200) {
-  //       throw Exception('Failed to update product');
-  //     }
-  //   } catch (e) {
-  //     print('Error updating product: $e');
-  //   }
-  // }
-
   Future<void> deleteProduct(String id) async {
     try {
       isLoading.value = true;
@@ -124,15 +102,11 @@ class MyProductController extends GetxController {
 
 
 
-
-
-
-
   Future<void> updateProduct(String id, Map<String, dynamic> updatedProduct, File? imageFile) async {
     try {
       isLoading.value = true;
       var token = await TokenSharePrefences.loadToken();
-      var request = http.MultipartRequest('PUT', Uri.parse("${apiUrl}/${id}"));
+      var request = await http.MultipartRequest('POST', Uri.parse("${apiUrl}/${id}?_method=PUT"));
       request.headers['Authorization'] = 'Bearer $token';
 
       // Add product data to the request
@@ -155,5 +129,7 @@ class MyProductController extends GetxController {
     }
   }
 
-
 }
+
+
+

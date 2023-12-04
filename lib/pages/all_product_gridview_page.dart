@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controller/add_to_card_controller.dart';
-import '../controller/product_controller.dart';
+import '../controller/all_product_controller.dart';
 import '../widgets/product_gridview.dart';
 
 class AllProductGridViewPage extends StatelessWidget {
@@ -19,6 +19,7 @@ class AllProductGridViewPage extends StatelessWidget {
       if (scrollController.position.pixels ==
           scrollController.position.maxScrollExtent) {
         productController.loadMore();
+        print("load more data");
       }
     });
   }

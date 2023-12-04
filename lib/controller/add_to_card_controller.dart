@@ -1,54 +1,49 @@
-
+import 'dart:convert';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddToCartController extends GetxController {
-  RxList cartItems = [].obs;
+  RxList<Map<String, dynamic>> cartItems = <Map<String, dynamic>>[].obs;
 
   @override
   void onInit() {
-    // TODO: implement onInit
-    cartItems;
-    addToCart;
-    removeFromCart;
-    getTotalAmount();
+    super.onInit();
+    // Load saved cart items on initialization
+    loadCartItems();
   }
 
   void addToCart(Map<String, dynamic> product) {
-    // Check if the product is already in the cart
     final existingProductIndex = cartItems.indexWhere((item) => item["id"] == product["id"]);
 
     if (existingProductIndex != -1) {
-      // If the product is already in the cart, increment the quantity
       cartItems[existingProductIndex]["quantity"]++;
-
     } else {
-      // If the product is not in the cart, add it with quantity 1
       product["quantity"] = 1;
       cartItems.add(product);
     }
-    refresh();
     update();
+    saveCartItems();
   }
 
+
   void removeFromCart(Map<String, dynamic> product) {
-    // Check if the product is in the cart
     final existingProductIndex = cartItems.indexWhere((item) => item["id"] == product["id"]);
 
     if (existingProductIndex != -1) {
-      // If the product is in the cart, decrement the quantity
       cartItems[existingProductIndex]["quantity"] -= 1;
 
-      // If the quantity becomes zero, remove the product from the cart
       if (cartItems[existingProductIndex]["quantity"] <= 0) {
         cartItems.removeAt(existingProductIndex);
       }
     }
-    refresh();
     update();
+    saveCartItems();
   }
 
   void clearCart() {
     cartItems.clear();
+    update();
+    saveCartItems();
   }
 
   double getTotalAmount() {
@@ -57,5 +52,21 @@ class AddToCartController extends GetxController {
       total += item["price"] * item["quantity"];
     }
     return total;
+  }
+
+  Future<void> saveCartItems() async {
+    final prefs = await SharedPreferences.getInstance();
+    final cartItemsJson = jsonEncode(cartItems.toList());
+    prefs.setString('cartItems', cartItemsJson);
+  }
+
+  Future<void> loadCartItems() async {
+    final prefs = await SharedPreferences.getInstance();
+    final cartItemsJson = prefs.getString('cartItems');
+
+    if (cartItemsJson != null) {
+      final List<dynamic> decodedCartItems = jsonDecode(cartItemsJson);
+      cartItems.assignAll(decodedCartItems.cast<Map<String, dynamic>>());
+    }
   }
 }

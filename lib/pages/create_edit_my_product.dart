@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'my_pruduct_crud_page.dart';
 
-
 class ProductEditPage extends StatefulWidget {
   final Map? product;
 
@@ -21,7 +20,6 @@ class _ProductEditPageState extends State<ProductEditPage> {
   TextEditingController priceController = TextEditingController();
   TextEditingController quantityController = TextEditingController();
   File? image;
-
 
   @override
   void initState() {
@@ -56,12 +54,24 @@ class _ProductEditPageState extends State<ProductEditPage> {
                 Container(
                   height: 250,
                   width: 300,
-                  color: Colors.green,
-                  child: image == null ? Text("No image") : Center(child: Image.file(image!,fit: BoxFit.cover,)),
-                ),
-                IconButton(
-                  onPressed: getImage,
-                  icon: Center(child: Icon(Icons.image)),
+                  child: image == null
+                      ? Center(
+                        child: Column(
+                          children: [
+                            SizedBox(height: 80,),
+                            Text("Select Image"),
+                            IconButton(
+                              onPressed: getImage,
+                              icon: Icon(Icons.camera_alt),
+                            ),
+                          ],
+                        ),
+                      )
+                      : Center(
+                          child: Image.file(
+                          image!,
+                          fit: BoxFit.cover,
+                        )),
                 ),
               ],
             ),
@@ -73,8 +83,6 @@ class _ProductEditPageState extends State<ProductEditPage> {
               controller: priceController,
               decoration: InputDecoration(labelText: 'Price'),
             ),
-            
-            
             TextFormField(
               controller: quantityController,
               decoration: InputDecoration(labelText: 'Quantity'),
@@ -95,18 +103,22 @@ class _ProductEditPageState extends State<ProductEditPage> {
                             await myProductController.createProductWithImage({
                               'name': nameController.text,
                               'price': double.parse(priceController.text),
-                              "stock_quantity" : double.parse(quantityController.text)
+                              "stock_quantity":
+                                  double.parse(quantityController.text)
                             }, image);
                             Navigator.pop(context);
                           } else {
                             await myProductController.updateProduct(
                               widget.product!["id"],
                               {
-                                'name': nameController.text,
-                                'price': double.parse(priceController.text),
-                                "stock_quantity" : double.parse(quantityController.text)
+                                'name': nameController.text ?? "null value",
+                                'price': double.parse(priceController.text) ??
+                                    "null value",
+                                "stock_quantity":
+                                    double.parse(quantityController.text) ??
+                                        "null value"
                               },
-                              image,
+                              image!,
                             );
 
                             Navigator.pop(context);
@@ -121,9 +133,10 @@ class _ProductEditPageState extends State<ProductEditPage> {
     );
   }
 
-
   Future<void> getImage() async {
-    final picImage = await ImagePicker().pickImage(source: ImageSource.gallery,);
+    final picImage = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
     setState(() {
       if (picImage != null) {
         image = File(picImage.path);

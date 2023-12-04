@@ -31,7 +31,7 @@ class ProductGridView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SizedBox(
-                    height: 19,
+                    height: 15,
                   ),
                   Align(
                     alignment: Alignment.centerLeft,
@@ -57,9 +57,9 @@ class ProductGridView extends StatelessWidget {
                             content: Text('Product added to cart successful')));
                       },
                       child: SizedBox(
-                          height: 50,
-                          width: 90,
-                          child: Image.asset("assets/add_to_card.png")))
+                          height: 55,
+                          width: 120,
+                          child: Image.asset("assets/add_to_card_image.png")))
                 ],
               ),
             ),

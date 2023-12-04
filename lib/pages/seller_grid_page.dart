@@ -6,52 +6,80 @@ import 'seller_product_gridview_page.dart'; // Import the SellerProductGridViewP
 
 class SellerGridViewPage extends StatelessWidget {
   SellerController sellerController = Get.put(SellerController());
+  ScrollController _scrollController = ScrollController();
 
   SellerGridViewPage() {
     // Constructor - Fetch data when the widget is created
     sellerController.getSeller();
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        sellerController.isLoadMore();
+        print("===========================================load more data");
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Obx(() {
-              if (sellerController.isLoading.value) {
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Obx(() {
+              if (sellerController.isLoading.value &&
+                  sellerController.page == 1) {
                 return CircularProgressIndicator();
               } else {
-                return Expanded(
-                  child: GridView.builder(
-                    itemCount: sellerController.sellers.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 0.9,
-                    ),
-                    itemBuilder: (context, index) {
+                return GridView.builder(
+                  controller: _scrollController,
+                  itemCount: sellerController.sellers.length + 1,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.9,
+                  ),
+                  itemBuilder: (context, index) {
+                    if (index < sellerController.sellers.length) {
                       var product = sellerController.sellers[index];
                       return ProductCard(
                         product: product,
                         onTap: () {
-                          // When a seller is tapped, navigate to the SellerProductGridViewPage
                           Get.to(() => SellerProductGridViewPage(
                             sellerId: product["id"],
                           ));
                         },
                       );
-                    },
-                  ),
+                    } else {
+                      return Container(
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.all(16.0),
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  },
                 );
               }
             }),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    sellerController.dispose();
+  }
 }
+
+
+
+
+
+
 
 class ProductCard extends StatelessWidget {
   final Map<String, dynamic> product;

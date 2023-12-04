@@ -1,7 +1,8 @@
+import 'package:alorferi_app_practice/pages/log_in_page.dart';
+import 'package:alorferi_app_practice/token_shareprefe.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controller/add_to_card_controller.dart';
-import 'MyProductGridViewPage.dart';
 import 'add_to_card_product_page.dart';
 import 'my_pruduct_crud_page.dart';
 import 'all_product_gridview_page.dart';
@@ -25,7 +26,7 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     addToCartController.cartItems;
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
     super.initState();
   }
 
@@ -34,7 +35,7 @@ class _HomePageState extends State<HomePage>
     return Scaffold(
       // app bar practice tap bar practice example and controller diya body ak ak action er sathe link kora hoice
       appBar: AppBar(
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.pink,
         centerTitle: true,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
@@ -45,9 +46,6 @@ class _HomePageState extends State<HomePage>
           style: TextStyle(color: Colors.black),
         ),
         actions: [
-          //for add to card
-          Icon(Icons.person),
-
           IconButton(
             icon: Badge(
                 label:
@@ -57,68 +55,152 @@ class _HomePageState extends State<HomePage>
                 )),
             onPressed: () {
               // Navigate to the cart page when the cart icon is pressed
-              Get.to(() => AddToCartProductPage());  ///AddToCartProductPage());
+              Get.to(() => AddToCartProductPage());
+
+              ///AddToCartProductPage());
             },
           ),
         ],
-        bottom: TabBar(
+      ),
+
+      /// botom lav bar
+      bottomNavigationBar: Material(
+        color: Colors.pink,
+        child: TabBar(
           controller: _tabController,
           tabs: [
             Tab(
-              text: "All Products",
+              icon: Icon(Icons.home),
+              text: "Home",
             ),
             Tab(
-              text: "My Products",
-            ),
-            Tab(
+              icon: Icon(Icons.groups),
               text: "Seller",
             ),
           ],
         ),
       ),
 
-      body: Container(
-          height: double.infinity,
-          width: double.infinity,
-          decoration: BoxDecoration(color: Colors.blueGrey),
-
-          // tabVarView use korte hobe and tabController
-          child: TabBarView(controller: _tabController, children: [
-            Container(
-                height: 200,
-                width: 200,
-                color: Colors.yellow,
-                child: AllProductGridViewPage()),
-            Container(
-                height: 200,
-                width: 200,
-                color: Colors.red,
-                child: MyProductsCrudPage()),
-            Container(
-                height: 200,
-                width: 200,
-                color: Colors.purple,
-                child: SellerGridViewPage()),
-          ])),
+      /// controll tab for protiqualar page
+      body: TabBarView(controller: _tabController, children: [
+        Container(child: AllProductGridViewPage()),
+        Container(child: SellerGridViewPage()),
+      ]),
 
 
+
+
+
+      ///Drawer part
       drawer: Drawer(
         child: ListView(
           children: [
-            DrawerHeader(child: Column(
-              children: [
-                CircleAvatar(
-                  child: Image.network("https://demo.alorferi.com/images/blank_product_picture.png"),
-                )
-              ],
-            )),
 
+            /// Drawer header part
+            DrawerHeader(
+              padding: EdgeInsets.all(0),
+              child: UserAccountsDrawerHeader(
+                decoration: BoxDecoration(color: Colors.pinkAccent),
+                accountName: Text('Sagor Ahammed'),
+                accountEmail: Text('sagor@gmail.com'),
+                onDetailsPressed: () {
+                  Get.back();
+                },
+                currentAccountPicture: CircleAvatar(
+                  backgroundImage: NetworkImage(
+                    "https://demo.alorferi.com/storage/images/0a929a56-64e4-4a5a-a1a8-d30f61492ab7.jpg",
+                  ),
+                ),
+              ),
+            ),
+
+
+
+            /// drawer body part
             ListTile(
-              onTap: (){
-               Get.to(MyProductsCrudPage()) ;
+              onTap: () {
+                Get.to(MyProductsCrudPage());
               },
               title: Text("My Products"),
-            )
+              leading: Icon(Icons.production_quantity_limits),
+            ),
+
+            ListTile(
+              onTap: () {},
+              title: Text("Profile"),
+              leading: Icon(Icons.person),
+            ),
+
+
+
+            ///theme change
+            ListTile(
+              leading: Icon(Icons.light_mode),
+              title: InkWell(
+                  onTap: () {
+                    Get.bottomSheet(
+                      Container(
+                        child: Wrap(
+                          children: [
+                            ListTile(
+                              leading: Icon(Icons.light_mode),
+                              title: Text("Light Mode"),
+                              onTap: () {
+                                Get.changeTheme(ThemeData.light());
+                              },
+                            ),
+                            ListTile(
+                              leading: Icon(Icons.dark_mode),
+                              title: Text("Dark Mode"),
+                              onTap: () {
+                                Get.changeTheme(ThemeData.dark());
+                              },
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                  child: Text("Buttom Sheets")),
+            ),
+
+
+
+            /// log out
+            ListTile(
+              onTap: () {
+                Get.defaultDialog(
+                    title: "Are You Sure",
+                    middleText: "Do you want to Leave this site",
+                    actions: [
+                      ElevatedButton(onPressed: (){
+                        Get.back();
+                      },
+                          child: Text("Later")
+                      ),
+
+                      ElevatedButton(onPressed: (){
+                        TokenSharePrefences.logout();
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (context) => LogInPage()));
+                      },
+                          child: Text("Yes")
+                      ),
+                    ]
+                );
+              },
+              title: Text(
+                "Log Out",
+                style: TextStyle(color: Colors.red),
+              ),
+              leading: Icon(
+                Icons.logout_outlined,
+                color: Colors.red,
+              ),
+            ),
+
+
+
           ],
         ),
       ),
