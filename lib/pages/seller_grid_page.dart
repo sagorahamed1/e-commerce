@@ -52,11 +52,7 @@ class SellerGridViewPage extends StatelessWidget {
                         },
                       );
                     } else {
-                      return Container(
-                        alignment: Alignment.center,
-                        padding: EdgeInsets.all(16.0),
-                        child: CircularProgressIndicator(),
-                      );
+                      return null;
                     }
                   },
                 );
@@ -74,10 +70,6 @@ class SellerGridViewPage extends StatelessWidget {
     sellerController.dispose();
   }
 }
-
-
-
-
 
 
 

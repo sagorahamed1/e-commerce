@@ -3,15 +3,18 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 
+import '../constants/url.dart';
+
 class ProductController extends GetxController {
-  var products = <Map<String, dynamic>>[].obs;
+  RxList products = [].obs;
   RxBool isLoading = false.obs;
-  int currentPage = 3;
+  int currentPage = 1;
 
   Future<void> loadMore() async {
     currentPage++;
     await getProducts(isLoadMore: true);
   }
+
 
   Future<void> getProducts({bool isLoadMore = false}) async {
     try {
@@ -21,7 +24,8 @@ class ProductController extends GetxController {
       }
 
       isLoading.value = true;
-      final url = Uri.parse("https://demo.alorferi.com/api/products?page=$currentPage");
+      // final url = Uri.parse("https://demo.alorferi.com/api/products?page=$currentPage");
+      final url = Uri.parse("${Urls.allProductUrl}?page=$currentPage");
       var response = await http.get(url);
       isLoading.value = false;
 

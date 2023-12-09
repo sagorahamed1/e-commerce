@@ -9,7 +9,6 @@ class MyProductsCrudPage extends StatefulWidget {
 }
 
 class _MyProductsCrudPageState extends State<MyProductsCrudPage> {
-   final MyProductController crudController = MyProductController();
   MyProductController myProductController = Get.put(MyProductController());
 
   @override
@@ -23,49 +22,68 @@ class _MyProductsCrudPageState extends State<MyProductsCrudPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(title: Text("My Product "),),
+      appBar: AppBar(
+        title: Text("My Product "),
+      ),
       body: Obx(
-        () => ListView.builder(
-          itemCount: myProductController.myProduct.length,
-          itemBuilder: (context, index) {
-            final product = myProductController.myProduct[index];
-            return buildProductTile(product);
-          },
-        ),
+        () {
+          if (myProductController.isLoading.value) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          return ListView.builder(
+            itemCount: myProductController.myProduct.length,
+            itemBuilder: (context, index) {
+              final product = myProductController.myProduct[index];
+              return productCard(product);
+            },
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          navigateToProductCreateAndEditPage(null); // Passing null for creating a new product
+          navigateToProductCreateAndEditPage(
+              null); // Passing null for creating a new product
         },
         child: Icon(Icons.add),
       ),
     );
   }
 
-  Widget buildProductTile(Map<String, dynamic> product) {
-    return ListTile(
-      leading: product['url'] == null
-          ? Image.network(
-              "https://demo.alorferi.com/images/blank_product_picture.png")
-          : Image.network("https://demo.alorferi.com${product['url']}"),
-      title: Text(product['name']),
-      subtitle: Text('Price: \$${product['price']}'),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () {
-              navigateToProductCreateAndEditPage(product);
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.delete),
-            onPressed: () {
-              showDeleteDialog(context, product);
-            },
-          ),
-        ],
+  Widget productCard(Map<String, dynamic> product) {
+    return Card(
+      elevation: 1,
+      child: ListTile(
+        leading: Container(
+          width: 50,
+          height: 120,
+          child: product['url'] == null
+              ? Image.network(
+                  "https://demo.alorferi.com/images/blank_product_picture.png")
+              : Image.network(
+                  "https://demo.alorferi.com${product['url']}",
+                  fit: BoxFit.cover,
+                ),
+        ),
+        title: Text(product['name']),
+        subtitle: Text('Price: \$${product['price']}'),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: Icon(Icons.edit),
+              onPressed: () {
+                navigateToProductCreateAndEditPage(product);
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.delete),
+              onPressed: () {
+                showDeleteDialog(context, product);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -101,6 +119,3 @@ class _MyProductsCrudPageState extends State<MyProductsCrudPage> {
     );
   }
 }
-
-
-

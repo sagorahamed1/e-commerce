@@ -4,27 +4,31 @@ import 'package:alorferi_app_practice/controller/log_in_controller.dart';
 import 'package:alorferi_app_practice/token_shareprefe.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import '../constants/url.dart';
+
+
 
 class MyProductController extends GetxController {
   RxList myProduct = [].obs;
   RxBool isLoading = false.obs;
 
-  var loginController = Get.find<LogInController>();
-  static const String apiUrl = "https://demo.alorferi.com/api/my-products";
+   var loginController = Get.find<LogInController>();
+  // static const String apiUrl = "https://demo.alorferi.com/api/my-products";
+  static const String apiUrl = "${Urls.myProductUrl}";
 
   @override
   void onInit() {
     super.onInit();
-    loginController;
+     loginController;
     getMyProducts();
   }
 
-  Future<void> getMyProducts() async {
 
-     // var token = loginController.token;
-      var token = await TokenSharePrefences.loadToken();
+  /// fetch my products
+  Future<void> getMyProducts() async {
     try {
-      isLoading.value = true;
+      var token = await TokenSharePrefences.loadToken();
+       isLoading.value = true;
 
       final response = await http.get(
         Uri.parse(apiUrl),
@@ -33,15 +37,15 @@ class MyProductController extends GetxController {
           "Authorization": "Bearer $token",
         },
       );
+       isLoading.value = false;
 
-      isLoading.value = false;
-      print("Statuse code : ${response.statusCode}");
       if (response.statusCode == 200) {
         Map<String, dynamic> responseData = jsonDecode(response.body);
         List productData = responseData['data'];
         myProduct.value = List.from(productData);
         print("Product fetch successful");
         refresh();
+        update();
       } else {
         print("Products fetch failed with status code: ${response.statusCode}");
       }
@@ -52,6 +56,7 @@ class MyProductController extends GetxController {
 
 
 
+  /// delete product method
   Future<void> deleteProduct(String id) async {
     try {
       isLoading.value = true;
@@ -63,7 +68,7 @@ class MyProductController extends GetxController {
           "Authorization": "Bearer $token",
         },
       );
-      print(token);
+
       isLoading.value = false;
       if (response.statusCode != 204) {
         throw Exception('Delete product succuss ${response.statusCode}');
@@ -73,6 +78,9 @@ class MyProductController extends GetxController {
     }
   }
 
+
+
+  /// create new product
   Future<void> createProductWithImage( Map<String, dynamic> product, File? imageFile) async {
     try {
       isLoading.value = true;
@@ -91,9 +99,9 @@ class MyProductController extends GetxController {
 
       isLoading.value = false;
       if (response.statusCode == 201) {
-        print('Product created successfully');
+        print('Product created successful');
       } else {
-        print('Failed to create product. Status code: ${response.statusCode}');
+        print('Failed to create product adn Status code: ${response.statusCode}');
       }
     } catch (error) {
       print('Error creating product: $error');
@@ -102,6 +110,8 @@ class MyProductController extends GetxController {
 
 
 
+
+  /// update product
   Future<void> updateProduct(String id, Map<String, dynamic> updatedProduct, File? imageFile) async {
     try {
       isLoading.value = true;
@@ -120,9 +130,9 @@ class MyProductController extends GetxController {
 
       isLoading.value = false;
       if (response.statusCode == 201) {
-        print('Product created successfully');
+        print('Product created successful');
       } else {
-        print('Failed to create product. Status code: ${response.statusCode}');
+        print('Failed to create product and Status code: ${response.statusCode}');
       }
     } catch (error) {
       print('Error creating product: $error');

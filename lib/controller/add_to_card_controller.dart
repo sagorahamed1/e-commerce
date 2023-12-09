@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AddToCartController extends GetxController {
-  RxList<Map<String, dynamic>> cartItems = <Map<String, dynamic>>[].obs;
+  RxList cartItems = [].obs;
 
   @override
   void onInit() {
@@ -15,6 +15,7 @@ class AddToCartController extends GetxController {
   void addToCart(Map<String, dynamic> product) {
     final existingProductIndex = cartItems.indexWhere((item) => item["id"] == product["id"]);
 
+   
     if (existingProductIndex != -1) {
       cartItems[existingProductIndex]["quantity"]++;
     } else {

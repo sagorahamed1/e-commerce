@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controller/seller_controller.dart';
+import 'add_to_card_product_page.dart';
 
 class SellerProductGridViewPage extends StatelessWidget {
   final String sellerId;
 
 
+  AddToCartController addToCartController = Get.put(AddToCartController());
   SellerController sellerController = Get.put(SellerController());
   ScrollController scrollController = ScrollController();
 
@@ -28,6 +30,21 @@ class SellerProductGridViewPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Seller Products'),
+          actions: [
+            IconButton(
+              icon: Badge(
+                  label:
+                  Obx(() => Text("${addToCartController.cartItems.length}")),
+                  child: Icon(
+                    Icons.shopping_cart,
+                  )),
+              onPressed: () {
+                // Navigate to the cart page when the cart icon is pressed
+                Get.to(() => AddToCartProductPage());
+              },
+            ),
+          ],
+
       ),
       body: Center(
         child: Column(
@@ -100,7 +117,7 @@ class ProductCard extends StatelessWidget {
                   Text("${product["name"]}", style: TextStyle(fontWeight: FontWeight.w700),maxLines: 1,),
                   Row(
                     children: [
-                      Text("Price : ৳ ${product['price']}"),
+                      Text("Price: ৳ ${product['price']}"),
                       Text("In Stock: ${product["stock_quantity"]}"),
                     ],
                   ),
@@ -108,15 +125,14 @@ class ProductCard extends StatelessWidget {
                   InkWell(
                       onTap: () {
                         addToCartController!.addToCart(product);
-                        // Show a snackbar to indicate that the product has been added to the cart
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text('Product added to cart successful')));
                       },
                       child: SizedBox(
                           height: 50,
                           width: 90,
-                          child: Image.asset("assets/add_to_card.png")))
-                  
+                          child: Image.asset("assets/add_to_card_image.png")))
+
                 ],
               ),
             )

@@ -31,14 +31,14 @@ class AllProductGridViewPage extends StatelessWidget {
         if (productController.isLoading.value &&
             productController.currentPage == 1) {
           // Display a loading indicator only when the first page is being loaded
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         } else {
           return GridView.builder(
             controller: scrollController,
             itemCount: productController.products.length + 1,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               childAspectRatio: 0.6,
             ),
@@ -47,11 +47,10 @@ class AllProductGridViewPage extends StatelessWidget {
                 var product = productController.products[index];
                 return ProductGridView(
                     product: product, addToCartController: addToCartController);
-              } else {
-                // Display a loading indicator at the bottom when more data is being loaded
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
+              } else{
+                return const Center(
+                  child: null,
+                ) ;
               }
             },
           );

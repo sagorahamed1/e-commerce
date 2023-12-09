@@ -1,7 +1,11 @@
+import 'package:alorferi_app_practice/controller/profile_controller.dart';
 import 'package:alorferi_app_practice/pages/log_in_page.dart';
+import 'package:alorferi_app_practice/pages/product_by_id_details_page.dart';
+import 'package:alorferi_app_practice/pages/profile_page.dart';
 import 'package:alorferi_app_practice/token_shareprefe.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../constants/url.dart';
 import '../controller/add_to_card_controller.dart';
 import 'add_to_card_product_page.dart';
 import 'my_pruduct_crud_page.dart';
@@ -19,23 +23,27 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   AddToCartController addToCartController = Get.put(AddToCartController());
+  ProfileController profileController = Get.put(ProfileController());
 
   // tabController dara bodir satha action set kora hoice
   late TabController _tabController;
 
   @override
   void initState() {
+    AllProductGridViewPage();
     addToCartController.cartItems;
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
+    profileController.fetchProfileData();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    var profileData = profileController.profile;
     return Scaffold(
       // app bar practice tap bar practice example and controller diya body ak ak action er sathe link kora hoice
       appBar: AppBar(
-        backgroundColor: Colors.pink,
+        backgroundColor: Colors.cyan,
         centerTitle: true,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
@@ -65,7 +73,7 @@ class _HomePageState extends State<HomePage>
 
       /// botom lav bar
       bottomNavigationBar: Material(
-        color: Colors.pink,
+        color: Colors.cyan,
         child: TabBar(
           controller: _tabController,
           tabs: [
@@ -77,6 +85,11 @@ class _HomePageState extends State<HomePage>
               icon: Icon(Icons.groups),
               text: "Seller",
             ),
+
+            Tab(
+              icon: Icon(Icons.person),
+              text: "profile",
+            ),
           ],
         ),
       ),
@@ -85,36 +98,31 @@ class _HomePageState extends State<HomePage>
       body: TabBarView(controller: _tabController, children: [
         Container(child: AllProductGridViewPage()),
         Container(child: SellerGridViewPage()),
+        Container(child: ProfilePage()),
       ]),
-
-
-
-
 
       ///Drawer part
       drawer: Drawer(
         child: ListView(
           children: [
-
             /// Drawer header part
-            DrawerHeader(
-              padding: EdgeInsets.all(0),
-              child: UserAccountsDrawerHeader(
-                decoration: BoxDecoration(color: Colors.pinkAccent),
-                accountName: Text('Sagor Ahammed'),
-                accountEmail: Text('sagor@gmail.com'),
-                onDetailsPressed: () {
-                  Get.back();
-                },
-                currentAccountPicture: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                    "https://demo.alorferi.com/storage/images/0a929a56-64e4-4a5a-a1a8-d30f61492ab7.jpg",
-                  ),
-                ),
-              ),
+            Obx(
+              () => DrawerHeader(
+                  padding: EdgeInsets.all(0),
+                  child: UserAccountsDrawerHeader(
+                    decoration: BoxDecoration(color: Colors.cyan),
+                    accountName: Text(profileData['name']),
+                    accountEmail: Text(profileData['email']),
+                    onDetailsPressed: () {
+                      Get.back();
+                    },
+                    currentAccountPicture: CircleAvatar(
+                      radius: 48,
+                      backgroundImage:
+                          NetworkImage("${Urls.baseUrl}${profileData["url"]}"),
+                    ),
+                  )),
             ),
-
-
 
             /// drawer body part
             ListTile(
@@ -126,12 +134,12 @@ class _HomePageState extends State<HomePage>
             ),
 
             ListTile(
-              onTap: () {},
+              onTap: () {
+                Get.to(ProfilePage());
+              },
               title: Text("Profile"),
               leading: Icon(Icons.person),
             ),
-
-
 
             ///theme change
             ListTile(
@@ -161,10 +169,8 @@ class _HomePageState extends State<HomePage>
                       ),
                     );
                   },
-                  child: Text("Buttom Sheets")),
+                  child: Text("Theme")),
             ),
-
-
 
             /// log out
             ListTile(
@@ -173,21 +179,21 @@ class _HomePageState extends State<HomePage>
                     title: "Are You Sure",
                     middleText: "Do you want to Leave this site",
                     actions: [
-                      ElevatedButton(onPressed: (){
-                        Get.back();
-                      },
-                          child: Text("Later")
-                      ),
-
-                      ElevatedButton(onPressed: (){
-                        TokenSharePrefences.logout();
-                        Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (context) => LogInPage()));
-                      },
-                          child: Text("Yes")
-                      ),
-                    ]
-                );
+                      ElevatedButton(
+                          onPressed: () {
+                            Get.back();
+                          },
+                          child: Text("Later")),
+                      ElevatedButton(
+                          onPressed: () {
+                            TokenSharePrefences.logout();
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LogInPage()));
+                          },
+                          child: Text("Yes")),
+                    ]);
               },
               title: Text(
                 "Log Out",
@@ -198,9 +204,6 @@ class _HomePageState extends State<HomePage>
                 color: Colors.red,
               ),
             ),
-
-
-
           ],
         ),
       ),

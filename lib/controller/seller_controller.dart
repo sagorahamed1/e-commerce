@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import '../constants/url.dart';
+
 class SellerController extends GetxController {
   var sellers = [].obs;
   var sellerProducts = [].obs;
@@ -11,7 +13,7 @@ class SellerController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _fetchData();
+    _fetchSellers();
   }
 
   Future <void> isLoadMore()async{
@@ -19,7 +21,7 @@ class SellerController extends GetxController {
     await getSeller(isLoadMore:  true);
   }
 
-  Future<void> _fetchData() async {
+  Future<void> _fetchSellers() async {
     try {
       isLoading.value = true;
 
@@ -40,7 +42,9 @@ class SellerController extends GetxController {
       page = 1;
     }
 
-    final url = Uri.parse("https://demo.alorferi.com/api/users?page=$page");
+    // final url = Uri.parse("https://demo.alorferi.com/api/users?page=$page");
+    final url = Uri.parse("${Urls.sellersUrl}?page=$page");
+
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -59,7 +63,9 @@ class SellerController extends GetxController {
   }
 
   Future<void> sellerProduct(String sellerId) async {
-    final url = Uri.parse("https://demo.alorferi.com/api/users/$sellerId/products");
+    // final url = Uri.parse("https://demo.alorferi.com/api/users/$sellerId/products");
+    final url = Uri.parse("${Urls.sellersUrl}/$sellerId/products");
+
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
