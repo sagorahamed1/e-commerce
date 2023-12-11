@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:alorferi_app_practice/token_shareprefe.dart';
+import 'package:alorferi_app_practice/modeles/token_shareprefe.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import '../constants/url.dart';

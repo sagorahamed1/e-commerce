@@ -118,6 +118,7 @@ class _SignUpPageState extends State<SignUpPage> {
               SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
+                  Get.to(LogInPage());
                   checkValidInfomation();
                   signUpController.CreateUser(
                     userNameController.text,
@@ -137,7 +138,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   void checkValidInfomation() {
     if (_validateFields() && isEmailValid) {
-      Future.delayed(Duration(seconds: 2), () {
+      Future.delayed(Duration(seconds: 1), () {
         setState(() {
           userNameController.clear();
           emailController.clear();
@@ -147,10 +148,8 @@ class _SignUpPageState extends State<SignUpPage> {
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Obx(() => signUpController.message.value.isNotEmpty
-                ? Text('Signup successful!')
-                : Text("error")),
-            duration: Duration(seconds: 2),
+            content: Text("Sign up Succussfull!"),
+            duration: Duration(seconds: 1),
           ),
         );
       });

@@ -3,17 +3,17 @@ import 'package:alorferi_app_practice/pages/all_product_gridview_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class PaymentGatway extends StatefulWidget{
+class PaymentGatwayPage extends StatefulWidget{
 
   num? amount;
 
-  PaymentGatway({super.key, required this.amount});
+  PaymentGatwayPage({super.key, required this.amount});
 
   @override
-  State<PaymentGatway> createState() => _PaymentGatwayState();
+  State<PaymentGatwayPage> createState() => _PaymentGatwayPageState();
 }
 
-class _PaymentGatwayState extends State<PaymentGatway> {
+class _PaymentGatwayPageState extends State<PaymentGatwayPage> {
 
   final AddToCartController addToCartController = Get.find<AddToCartController>();
 

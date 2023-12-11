@@ -57,6 +57,8 @@ class ProductController extends GetxController {
     }
   }
 
+
+  /// searching
   void searchProducts(String text) {
     print("==================================>> $products");
     text.isEmpty?

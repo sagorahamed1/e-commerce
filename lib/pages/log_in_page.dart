@@ -19,6 +19,7 @@ class _LogInPageState extends State<LogInPage> {
 
   String errorMessage = "";
   bool isEmailValid = true;
+  var isSecure = true.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -66,13 +67,27 @@ class _LogInPageState extends State<LogInPage> {
                 SizedBox(
                   height: 30,
                 ),
-                TextField(
+
+                Obx(() =>   TextField(
                   controller: passwordController,
+                  obscureText: isSecure.value,
                   decoration: InputDecoration(
-                      label: Text("Enter you password"),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(13))),
-                ),
+                    label: Text("Enter you password"),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(13)),
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        isSecure.value = !isSecure.value;
+                      },
+                      child: Icon(
+                        isSecure.value
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                      ),
+                    ),
+
+                  ),
+                ),),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -80,7 +95,6 @@ class _LogInPageState extends State<LogInPage> {
                     TextButton(onPressed: () {}, child: Text("Ramamber me")),
                     TextButton(
                       onPressed: () {
-                        Get.to(SignUpPage());
                       },
                       child: Text("Forgot Password"),
                     )

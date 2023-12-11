@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controller/add_to_card_controller.dart';
-import '../payments_gatway.dart';
+import 'payments_gatway_page.dart';
 
 class AddToCartProductPage extends StatefulWidget {
   @override
@@ -121,7 +121,7 @@ class _AddToCartProductPageState extends State<AddToCartProductPage> {
                 onPressed: () {
                   if (addToCartController.cartItems.isNotEmpty) {
                     Get.to(
-                        PaymentGatway(
+                        PaymentGatwayPage(
                             amount: addToCartController.getTotalAmount()),
                         transition: Transition.zoom,
                         duration: Duration(microseconds: 570000));

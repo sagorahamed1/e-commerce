@@ -4,7 +4,7 @@ import 'package:alorferi_app_practice/controller/profile_controller.dart';
 import 'package:alorferi_app_practice/pages/log_in_page.dart';
 import 'package:alorferi_app_practice/pages/product_by_id_details_page.dart';
 import 'package:alorferi_app_practice/pages/profile_page.dart';
-import 'package:alorferi_app_practice/token_shareprefe.dart';
+import 'package:alorferi_app_practice/modeles/token_shareprefe.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../constants/url.dart';
