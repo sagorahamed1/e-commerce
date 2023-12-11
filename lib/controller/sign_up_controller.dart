@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 
 class SignUpController extends GetxController {
 
+  RxString message  = "".obs;
+
    Future<void> CreateUser(String name, String email, String password, String confirmpassword) async {
     try {
       var url = Uri.parse("https://demo.alorferi.com/api/register");
@@ -18,9 +20,9 @@ class SignUpController extends GetxController {
 
       print(response.body);
       if (response.statusCode == 200 || response.statusCode == 201) {
-        var ss = jsonDecode(response.body);
-        var pp = ss['data']['message'];
-        print(pp);
+        var signUpData = jsonDecode(response.body);
+        var signUpMessages = signUpData['data']['message'];
+        message.value = signUpMessages;
         print("User create successful");
       } else {
         // Print more details about the response

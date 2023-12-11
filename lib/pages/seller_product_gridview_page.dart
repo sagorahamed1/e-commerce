@@ -8,15 +8,14 @@ import 'add_to_card_product_page.dart';
 class SellerProductGridViewPage extends StatelessWidget {
   final String sellerId;
 
-
   AddToCartController addToCartController = Get.put(AddToCartController());
   SellerController sellerController = Get.put(SellerController());
   ScrollController scrollController = ScrollController();
 
   SellerProductGridViewPage({required this.sellerId}) {
-
     sellerController.addListener(() {
-      if(scrollController.position.pixels == scrollController.position.maxScrollExtent){
+      if (scrollController.position.pixels ==
+          scrollController.position.maxScrollExtent) {
         sellerController.isLoadMore();
       }
     });
@@ -30,21 +29,20 @@ class SellerProductGridViewPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Seller Products'),
-          actions: [
-            IconButton(
-              icon: Badge(
-                  label:
-                  Obx(() => Text("${addToCartController.cartItems.length}")),
-                  child: Icon(
-                    Icons.shopping_cart,
-                  )),
-              onPressed: () {
-                // Navigate to the cart page when the cart icon is pressed
-                Get.to(() => AddToCartProductPage());
-              },
-            ),
-          ],
-
+        actions: [
+          IconButton(
+            icon: Badge(
+                label:
+                    Obx(() => Text("${addToCartController.cartItems.length}")),
+                child: Icon(
+                  Icons.shopping_cart,
+                )),
+            onPressed: () {
+              // Navigate to the cart page when the cart icon is pressed
+              Get.to(() => AddToCartProductPage());
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(
@@ -60,16 +58,17 @@ class SellerProductGridViewPage extends StatelessWidget {
                     itemCount: sellerController.sellerProducts.length,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      childAspectRatio: 0.6,
+                      crossAxisSpacing: 4,
+                      mainAxisSpacing: 6,
+                      childAspectRatio: 0.7,
                     ),
                     itemBuilder: (context, index) {
-                      if(index < sellerController.sellerProducts.length){
+                      if (index < sellerController.sellerProducts.length) {
                         var product = sellerController.sellerProducts[index];
                         return ProductCard(product: product);
-                      }else{
+                      } else {
                         return CircularProgressIndicator();
                       }
-
                     },
                   ),
                 );
@@ -85,13 +84,15 @@ class SellerProductGridViewPage extends StatelessWidget {
 class ProductCard extends StatelessWidget {
   final Map<String, dynamic> product;
 
-   ProductCard({Key? key, required this.product}) : super(key: key);
+  ProductCard({Key? key, required this.product}) : super(key: key);
 
-  AddToCartController addToCartController = AddToCartController();
+  AddToCartController addToCartController = Get.put(AddToCartController());
 
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 5,
+      color: Color(0xFFdbdff7),
       child: InkWell(
         onTap: () {
           // Handle product tap
@@ -100,39 +101,57 @@ class ProductCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Expanded(
-              flex: 5,
+              flex: 4,
               child: product["url"] == null
-                  ?  Image.network("https://demo.alorferi.com/images/blank_product_picture.png")
+                  ? Image.network(
+                      "https://demo.alorferi.com/images/blank_product_picture.png")
                   : Image.network(
-                "https://demo.alorferi.com${product["url"]}",
-                fit: BoxFit.cover,
-              ),
+                      "https://demo.alorferi.com${product["url"]}",
+                      fit: BoxFit.cover,
+                    ),
             ),
-            SizedBox(height: 15,),
+            SizedBox(
+              height: 15,
+            ),
             Expanded(
-              flex: 3,
+              flex: 4,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text("${product["name"]}", style: TextStyle(fontWeight: FontWeight.w700),maxLines: 1,),
+                  Text(
+                    "${product["name"]}",
+                    style: TextStyle(fontWeight: FontWeight.w700),
+                    maxLines: 1,
+                  ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text("Price: ৳ ${product['price']}"),
-                      Text("In Stock: ${product["stock_quantity"]}"),
+                      Expanded(
+                        child: Text(
+                          "৳ ${product["price"]}",
+                          overflow: TextOverflow
+                              .ellipsis, // Optional: handle overflow with ellipsis
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          "In Stock: ${product['stock_quantity']}",
+                          overflow: TextOverflow
+                              .ellipsis, // Optional: handle overflow with ellipsis
+                        ),
+                      ),
                     ],
                   ),
-
                   InkWell(
                       onTap: () {
-                        addToCartController!.addToCart(product);
+                        addToCartController.addToCart(product);
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text('Product added to cart successful')));
                       },
                       child: SizedBox(
-                          height: 50,
-                          width: 90,
+                          height: 63,
+                          width: 150,
                           child: Image.asset("assets/add_to_card_image.png")))
-
                 ],
               ),
             )

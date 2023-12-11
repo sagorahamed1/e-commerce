@@ -17,20 +17,32 @@ class ProductGridView extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(5),
       child: GestureDetector(
-        onTap: (){
-          Get.to(ProductByIdDetailsPage(id: product['id'], products: product,));
+        onTap: () {
+          Get.to(
+              ProductByIdDetailsPage(
+                id: product['id'],
+                products: product,
+              ),
+              transition: Transition.zoom,
+              duration: Duration(microseconds: 570000));
         },
         child: Card(
+          color: Color(0xFFdbdff7),
           elevation: 5,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Expanded(
-                flex: 6,
+                flex: 4,
                 child: product["url"] == null
                     ? Image.network(
                         "https://demo.alorferi.com/images/blank_product_picture.png")
-                    : Image.network("https://demo.alorferi.com${product["url"]}"),
+                    : Hero(
+                        tag: product['id'],
+                        child: Image.network(
+                          "https://demo.alorferi.com${product["url"]}",
+                          fit: BoxFit.cover,
+                        )),
               ),
               Expanded(
                 flex: 4,
@@ -51,24 +63,36 @@ class ProductGridView extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Text("৳ ${product["price"]}"),
-                        Text("In Stock: ${product['stock_quantity']}")
+                        Expanded(
+                          child: Text(
+                            "৳ ${product["price"]}",
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            "In Stock: ${product['stock_quantity']}",
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
                       ],
                     ),
                     InkWell(
-                        onTap: ()async {
-                          var token =await TokenSharePrefences.loadToken();
-                          if(token == null){
+                        onTap: () async {
+                          var token = await TokenSharePrefences.loadToken();
+                          if (token == null) {
+                            addToCartController!.addToCart(product);
                             Get.to(LogInPage());
-                          }else{
+                          } else {
                             addToCartController!.addToCart(product);
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text('Product added to cart successful')));
+                                content:
+                                    Text('Product added to cart successful')));
                           }
                         },
                         child: SizedBox(
-                            height: 55,
-                            width: 120,
+                            height: 63,
+                            width: 150,
                             child: Image.asset("assets/add_to_card_image.png")))
                   ],
                 ),

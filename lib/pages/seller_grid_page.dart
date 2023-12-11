@@ -1,3 +1,4 @@
+import 'package:alorferi_app_practice/pages/all_product_gridview_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -46,9 +47,12 @@ class SellerGridViewPage extends StatelessWidget {
                       return ProductCard(
                         product: product,
                         onTap: () {
-                          Get.to(() => SellerProductGridViewPage(
-                            sellerId: product["id"],
-                          ));
+                          Get.to(
+                              () => SellerProductGridViewPage(
+                                    sellerId: product["id"],
+                                  ),
+                              transition: Transition.zoom,
+                              duration: Duration(microseconds: 570000));
                         },
                       );
                     } else {
@@ -71,13 +75,12 @@ class SellerGridViewPage extends StatelessWidget {
   }
 }
 
-
-
 class ProductCard extends StatelessWidget {
   final Map<String, dynamic> product;
   final VoidCallback onTap;
 
-  const ProductCard({Key? key, required this.product, required this.onTap}) : super(key: key);
+  const ProductCard({Key? key, required this.product, required this.onTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -90,19 +93,23 @@ class ProductCard extends StatelessWidget {
             Expanded(
               flex: 10,
               child: product["url"] == null
-                  ?  Image.network("https://demo.alorferi.com/images/blank_product_picture.png")
+                  ? Image.network(
+                      "https://demo.alorferi.com/images/blank_product_picture.png")
                   : Image.network(
-                "https://demo.alorferi.com${product["url"]}",
-                fit: BoxFit.cover,
-              ),
+                      "https://demo.alorferi.com${product["url"]}",
+                      fit: BoxFit.cover,
+                    ),
             ),
-            SizedBox(height: 15,),
+            SizedBox(
+              height: 15,
+            ),
             Expanded(
               flex: 2,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text("${product["name"]}", style: TextStyle(fontWeight: FontWeight.w700)),
+                  Text("${product["name"]}",
+                      style: TextStyle(fontWeight: FontWeight.w700)),
                 ],
               ),
             )

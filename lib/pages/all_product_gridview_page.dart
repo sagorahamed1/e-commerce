@@ -1,3 +1,4 @@
+import 'package:alorferi_app_practice/token_shareprefe.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -11,7 +12,8 @@ class AllProductGridViewPage extends StatelessWidget {
   ScrollController scrollController = ScrollController();
 
   AllProductGridViewPage() {
-    // Constructor - Fetch data when the widget is created
+    // Constructor Fetch data when we go to this widgetx
+    productController.suggestions();
     productController.getProducts();
 
     // loading new data when the user scrolls down
@@ -23,6 +25,7 @@ class AllProductGridViewPage extends StatelessWidget {
       }
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -37,14 +40,14 @@ class AllProductGridViewPage extends StatelessWidget {
         } else {
           return GridView.builder(
             controller: scrollController,
-            itemCount: productController.products.length + 1,
+            itemCount: productController.suggestions.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: 0.6,
+              childAspectRatio: 0.7,
             ),
             itemBuilder: (context, index) {
-              if (index < productController.products.length) {
-                var product = productController.products[index];
+              if (index < productController.suggestions.length) {
+                var product = productController.suggestions[index];
                 return ProductGridView(
                     product: product, addToCartController: addToCartController);
               } else{

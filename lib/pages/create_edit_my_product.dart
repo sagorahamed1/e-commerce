@@ -30,11 +30,12 @@ class _ProductEditPageState extends State<ProductEditPage> {
     myProductController.isLoading.value;
     myProductController.myProduct.value;
     myProductController.getMyProducts();
-    // Initialize controllers with existing product data if available
+
+    /// if product have already fill show this product informaition on All feilds
     if (widget.product != null) {
       nameController.text = widget.product!['name'];
       priceController.text = widget.product!['price'].toString();
-      priceController.text = widget.product!['stock_quantity'].toString();
+      quantityController.text = widget.product!['stock_quantity'].toString();
       widget.product!['id'];
     }
   }
@@ -140,7 +141,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
                               Navigator.pop(context);
                             }
                           },
-                          child: Text("Save")),
+                          child: Text("Submit")),
                     ],
                   )),
             ],

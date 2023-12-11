@@ -6,13 +6,22 @@ import 'package:get/get.dart';
 import '../constants/url.dart';
 
 class ProductController extends GetxController {
-  RxList products = [].obs;
+  var products = [].obs;
+  var suggestions = [].obs;
   RxBool isLoading = false.obs;
   int currentPage = 1;
 
   Future<void> loadMore() async {
     currentPage++;
     await getProducts(isLoadMore: true);
+  }
+
+
+  @override
+  void onInit() {
+    super.onInit();
+    getProducts();
+    searchProducts("");
   }
 
 
@@ -24,7 +33,6 @@ class ProductController extends GetxController {
       }
 
       isLoading.value = true;
-      // final url = Uri.parse("https://demo.alorferi.com/api/products?page=$currentPage");
       final url = Uri.parse("${Urls.allProductUrl}?page=$currentPage");
       var response = await http.get(url);
       isLoading.value = false;
@@ -38,14 +46,28 @@ class ProductController extends GetxController {
         } else {
           products.value = List.from(productData);
         }
+        refresh();
         print("Product fetch successful");
       } else {
         print("Products fetch failed");
-        // Handle errors or show a message to the user
       }
     } catch (e) {
       print("Error: $e");
-      // Handle errors or show a message to the user
+
     }
+  }
+
+  void searchProducts(String text) {
+    print("==================================>> $products");
+    text.isEmpty?
+        suggestions.value = products:
+        suggestions.value = products
+        .where((product) =>
+        product['name']
+            .toString()
+            .toLowerCase()
+            .contains(text.toLowerCase()))
+        .toList();
+    update();
   }
 }

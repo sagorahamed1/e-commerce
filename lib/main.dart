@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    LogInController logInController = Get.put(LogInController());
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
@@ -22,18 +23,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      // Using a ternary operator to conditionally choose the initial page
-       home: FutureBuilder(
-         future: TokenSharePrefences.loadToken(),
-         builder: (context, snapshot) {
-           if(snapshot.data == null){
-             return AllProductGridViewPage();
-           }
-           else{
-            return HomePage();
-           }
-         },
-       )
+
+       home: HomePage(),
     );
   }
 }

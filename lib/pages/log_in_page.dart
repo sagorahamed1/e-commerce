@@ -137,7 +137,7 @@ class _LogInPageState extends State<LogInPage> {
   /// check real user
   void checkValidInfomaition() {
     if (_validateFields() && isEmailValid) {
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(Duration(seconds: 2), () {
         setState(() {
           emailController.clear();
           passwordController.clear();
@@ -145,10 +145,10 @@ class _LogInPageState extends State<LogInPage> {
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: logInController.token.value.isEmpty
+            content: Obx(() =>  logInController.errorMessage.value.isNotEmpty
                 ? Text("The user credentials were incorrect. try again",style: TextStyle(color: Colors.red),)
-                : Text('logIn successful!'),
-            duration: Duration(seconds: 1),
+                : Text('logIn successful!'), ),
+            duration: Duration(seconds: 2),
           ),
         );
       });

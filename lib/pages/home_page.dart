@@ -1,3 +1,5 @@
+import 'package:alorferi_app_practice/controller/all_product_controller.dart';
+import 'package:alorferi_app_practice/controller/log_in_controller.dart';
 import 'package:alorferi_app_practice/controller/profile_controller.dart';
 import 'package:alorferi_app_practice/pages/log_in_page.dart';
 import 'package:alorferi_app_practice/pages/product_by_id_details_page.dart';
@@ -24,6 +26,7 @@ class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   AddToCartController addToCartController = Get.put(AddToCartController());
   ProfileController profileController = Get.put(ProfileController());
+  ProductController productController = Get.put(ProductController());
 
   // tabController dara bodir satha action set kora hoice
   late TabController _tabController;
@@ -40,20 +43,42 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     var profileData = profileController.profile;
+    TextEditingController text = TextEditingController();
     return Scaffold(
       // app bar practice tap bar practice example and controller diya body ak ak action er sathe link kora hoice
       appBar: AppBar(
         backgroundColor: Colors.cyan,
-        centerTitle: true,
+        // centerTitle: true,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(25),
                 bottomRight: Radius.circular(25))),
         title: Text(
-          "E-commerce App",
+          "BD Shop",
           style: TextStyle(color: Colors.black),
         ),
         actions: [
+          /// search bar
+          Container(
+            padding: EdgeInsets.only(left: 5),
+            height: 30,
+            width: 130,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: TextFormField(
+              controller: text,
+              onChanged: (text) {
+                productController.searchProducts(text);
+              },
+              cursorColor: Colors.grey,
+              decoration: InputDecoration(
+                  border: InputBorder.none, suffixIcon: Icon(Icons.search)),
+            ),
+          ),
+
+          /// shoping card
           IconButton(
             icon: Badge(
                 label:
@@ -63,9 +88,9 @@ class _HomePageState extends State<HomePage>
                 )),
             onPressed: () {
               // Navigate to the cart page when the cart icon is pressed
-              Get.to(() => AddToCartProductPage());
-
-              ///AddToCartProductPage());
+              Get.to(() => AddToCartProductPage(),
+                  transition: Transition.zoom,
+                  duration: Duration(microseconds: 570000));
             },
           ),
         ],
@@ -85,7 +110,6 @@ class _HomePageState extends State<HomePage>
               icon: Icon(Icons.groups),
               text: "Seller",
             ),
-
             Tab(
               icon: Icon(Icons.person),
               text: "profile",
@@ -107,27 +131,31 @@ class _HomePageState extends State<HomePage>
           children: [
             /// Drawer header part
             Obx(
-              () => DrawerHeader(
-                  padding: EdgeInsets.all(0),
-                  child: UserAccountsDrawerHeader(
-                    decoration: BoxDecoration(color: Colors.cyan),
-                    accountName: Text(profileData['name']),
-                    accountEmail: Text(profileData['email']),
-                    onDetailsPressed: () {
-                      Get.back();
-                    },
-                    currentAccountPicture: CircleAvatar(
-                      radius: 48,
-                      backgroundImage:
-                          NetworkImage("${Urls.baseUrl}${profileData["url"]}"),
-                    ),
-                  )),
+              () => profileController.profile.value.isEmpty
+                  ? Text("")
+                  : DrawerHeader(
+                      padding: EdgeInsets.all(0),
+                      child: UserAccountsDrawerHeader(
+                        decoration: BoxDecoration(color: Colors.cyan),
+                        accountName: Text(profileData['name']),
+                        accountEmail: Text(profileData['email']),
+                        onDetailsPressed: () {
+                          Get.back();
+                        },
+                        currentAccountPicture: CircleAvatar(
+                          radius: 48,
+                          backgroundImage: NetworkImage(
+                              "${Urls.baseUrl}${profileData["url"]}"),
+                        ),
+                      )),
             ),
 
             /// drawer body part
             ListTile(
               onTap: () {
-                Get.to(MyProductsCrudPage());
+                Get.to(MyProductsCrudPage(),
+                    transition: Transition.zoom,
+                    duration: Duration(microseconds: 570000));
               },
               title: Text("My Products"),
               leading: Icon(Icons.production_quantity_limits),
@@ -135,7 +163,9 @@ class _HomePageState extends State<HomePage>
 
             ListTile(
               onTap: () {
-                Get.to(ProfilePage());
+                Get.to(ProfilePage(),
+                    transition: Transition.zoom,
+                    duration: Duration(microseconds: 570000));
               },
               title: Text("Profile"),
               leading: Icon(Icons.person),
@@ -187,10 +217,7 @@ class _HomePageState extends State<HomePage>
                       ElevatedButton(
                           onPressed: () {
                             TokenSharePrefences.logout();
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LogInPage()));
+                            Get.offAll(() => LogInPage());
                           },
                           child: Text("Yes")),
                     ]);

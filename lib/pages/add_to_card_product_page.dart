@@ -10,7 +10,8 @@ class AddToCartProductPage extends StatefulWidget {
 }
 
 class _AddToCartProductPageState extends State<AddToCartProductPage> {
-  final AddToCartController addToCartController = Get.find<AddToCartController>();
+  final AddToCartController addToCartController =
+      Get.find<AddToCartController>();
 
   @override
   void initState() {
@@ -18,6 +19,7 @@ class _AddToCartProductPageState extends State<AddToCartProductPage> {
     super.initState();
     addToCartController.cartItems;
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,9 +49,9 @@ class _AddToCartProductPageState extends State<AddToCartProductPage> {
                               flex: 5,
                               child: item["url"] == null
                                   ? Image.network(
-                                  "https://demo.alorferi.com/images/blank_product_picture.png")
+                                      "https://demo.alorferi.com/images/blank_product_picture.png")
                                   : Image.network(
-                                  "https://demo.alorferi.com${item["url"]}"),
+                                      "https://demo.alorferi.com${item["url"]}"),
                             ),
                             Expanded(
                               flex: 5,
@@ -61,13 +63,15 @@ class _AddToCartProductPageState extends State<AddToCartProductPage> {
                                   Text(
                                     item['name'],
                                     style: TextStyle(
-                                        fontSize: 20, fontWeight: FontWeight.w900),
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w900),
                                   ),
                                   Text("price : ৳ ${item['price']}"),
                                   SizedBox(
                                     height: 25,
                                   ),
-                                  Text("Total Quantity :${item["stock_quantity"]}"),
+                                  Text(
+                                      "Total Quantity :${item["stock_quantity"]}"),
                                   Container(
                                     color: Colors.white38,
                                     padding: EdgeInsets.only(left: 24),
@@ -76,19 +80,24 @@ class _AddToCartProductPageState extends State<AddToCartProductPage> {
                                         IconButton(
                                           onPressed: () {
                                             setState(() {
-                                              addToCartController.removeFromCart(item);
+                                              addToCartController
+                                                  .removeFromCart(item);
                                             });
                                           },
-                                          icon: Icon(Icons.remove, size: 40, color: Colors.blue),
+                                          icon: Icon(Icons.remove,
+                                              size: 40, color: Colors.blue),
                                         ),
-                                        Text("${item["quantity"]}", style: TextStyle(fontSize: 20)),
+                                        Text("${item["quantity"]}",
+                                            style: TextStyle(fontSize: 20)),
                                         IconButton(
                                           onPressed: () {
                                             setState(() {
-                                              addToCartController.addToCart(item);
+                                              addToCartController
+                                                  .addToCart(item);
                                             });
                                           },
-                                          icon: Icon(Icons.add, size: 36, color: Colors.blue),
+                                          icon: Icon(Icons.add,
+                                              size: 36, color: Colors.blue),
                                         ),
                                       ],
                                     ),
@@ -106,11 +115,16 @@ class _AddToCartProductPageState extends State<AddToCartProductPage> {
             ),
             Divider(),
             ListTile(
-              title: Text('Total Amount: \$${addToCartController.getTotalAmount()}'),
+              title: Text(
+                  'Total Amount: \$${addToCartController.getTotalAmount()}'),
               trailing: ElevatedButton(
                 onPressed: () {
                   if (addToCartController.cartItems.isNotEmpty) {
-                    Get.to(PaymentGatway(amount: addToCartController.getTotalAmount()));
+                    Get.to(
+                        PaymentGatway(
+                            amount: addToCartController.getTotalAmount()),
+                        transition: Transition.zoom,
+                        duration: Duration(microseconds: 570000));
                   } else {
                     // Handle case when cart is empty
                     // You may show a snackbar or navigate to a different screen

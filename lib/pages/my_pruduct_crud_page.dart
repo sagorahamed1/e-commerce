@@ -25,21 +25,25 @@ class _MyProductsCrudPageState extends State<MyProductsCrudPage> {
       appBar: AppBar(
         title: Text("My Product "),
       ),
-      body: Obx(
-        () {
-          if (myProductController.isLoading.value) {
-            return Center(child: CircularProgressIndicator());
-          }
+      body: StreamBuilder(
+          stream: null,
+          builder: (context, snapshot) {
+            return Obx(
+              () {
+                if (myProductController.isLoading.value) {
+                  return Center(child: CircularProgressIndicator());
+                }
 
-          return ListView.builder(
-            itemCount: myProductController.myProduct.length,
-            itemBuilder: (context, index) {
-              final product = myProductController.myProduct[index];
-              return productCard(product);
-            },
-          );
-        },
-      ),
+                return ListView.builder(
+                  itemCount: myProductController.myProduct.length,
+                  itemBuilder: (context, index) {
+                    final product = myProductController.myProduct[index];
+                    return productCard(product);
+                  },
+                );
+              },
+            );
+          }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           navigateToProductCreateAndEditPage(
@@ -89,7 +93,8 @@ class _MyProductsCrudPageState extends State<MyProductsCrudPage> {
   }
 
   void navigateToProductCreateAndEditPage(Map<String, dynamic>? product) {
-    Get.to(ProductEditPage(product: product));
+    Get.to(ProductEditPage(product: product),
+        transition: Transition.fade, duration: Duration(microseconds: 570000));
   }
 
   void showDeleteDialog(
